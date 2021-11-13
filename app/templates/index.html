@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <link href="dist/css/select2.min.css" rel="stylesheet" />
+    <link href="dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Apprise API - Send multi channel notification using single endpoint</title>
+</head>
+
+
+
+<body>
+
+    <div style="display:block;width:80%;margin:10px auto">
+
+        <form name="ContainersForm" id="containersform">
+
+
+            <br><br>
+
+            <div class="card" id="wrapper">
+                <div class="card-header text-center">
+                    Apprise API - Send multi channel notification using single endpoint
+                </div>
+                <div class="card-body">
+                    
+                    <button type="button" class="btn btn-info btn-sm" id="reload" style="margin-left: 20px;">Load Current Configuration</button>
+
+                    <button type="button" class="btn btn-info btn-sm" id="save" style="margin-left: 20px;">Update  Configuration</button>
+                    <div style="display:block;margin-top:15px;">&nbsp;</div>
+                    <textarea id="editor" rows="45" style="width: 99%;"></textarea>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+</body>
+
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/ace.js"></script>
+<script src="js/mode-yaml.js"></script>
+<script src="js/jquery-ace.min.js"></script>
+<script src="dist/js/select2.min.js"></script>
+<script src="dist/js/bootstrap.min.js"></script>
+
+
+<script>
+    ace.config.set("basePath", "js");
+    var editor;
+
+
+    $(document).ready(function () {
+        $('#editor').ace({ theme: 'twilight', lang: 'yaml' })
+        editor = $('#editor').data('ace').editor.ace
+        LoadCurrentConfiguration();
+       
+
+
+        $('#generate').click(function () {
+            cname = $('#containers').val();
+            $.get("api/generate?cname=" + cname, function (data) {
+                $('#editor').ace({ theme: 'twilight', lang: 'yaml' })
+                var editor = $('#editor').data('ace').editor.ace
+                editor.session.setValue(data);
+            });
+        });
+
+        $('#reload').click(function () {
+            LoadCurrentConfiguration();
+        });
+
+
+        $('#save').click(function () {
+            var configuration = editor.session.getValue();
+            $.ajax({
+                url: 'api/config/save',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({ configuration: configuration}),
+                processData: false,
+                success: function (data, textStatus, jQxhr) {
+                console.log(data)
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    
+                }
+            });
+        });
+
+    });
+
+function LoadCurrentConfiguration()
+{
+    $.get("api/config/load", function (data) {
+                editor.session.setValue(data);
+        });
+}
+    
+
+    
+
+</script>
+
+</html>

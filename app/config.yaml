@@ -1,0 +1,9 @@
+#example
+admins: #Group name
+  - discord://webhook_id/webhook_token
+  - msteams://TokenA/TokenB/TokenC/
+  - slack://TokenA/TokenB/TokenC/Channel
+  - mailgun://user@hostname/apikey/email1/email2/emailN
+  - tgram://bottoken/ChatID
+  - twitter://CKey/CSecret/AKey/ASecret
+  - sns://{AccessKeyID}/{AccessKeySecret}/{Region}/+{PhoneNo}
