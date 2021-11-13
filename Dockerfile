@@ -5,10 +5,10 @@ LABEL maintainer="tomer.klein@gmail.com"
 RUN pip3 install apprise --no-cache-dir
 
 #Create working directory
-RUN mkdir /opt/apprise
+RUN mkdir /opt/app
 
-COPY app /opt/apprise
+COPY app /opt/app
 
 EXPOSE 8080
 
-ENTRYPOINT ["/usr/bin/python3", "/opt/apprise/app.py"]
+ENTRYPOINT ["/usr/bin/python3", "/opt/app/app.py"]
