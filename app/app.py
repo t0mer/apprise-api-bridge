@@ -38,7 +38,7 @@ def create_apobj(apobj, notifires):
 app = FastAPI(title="Apprise API", description="Send multi channel notification using single endpoint", version="1.0.0")
 logger.info("Configuring app")
 app = FastAPI(title="Apprise API", description="Send multi channel notification using single endpoint", version="1.0.0")
-# app.mount("/dist", StaticFiles(directory="dist"), name="dist")
+app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 app.mount("/js", StaticFiles(directory="dist/js"), name="js")
 app.mount("/css", StaticFiles(directory="dist/css"), name="css")
 templates = Jinja2Templates(directory="templates/")
