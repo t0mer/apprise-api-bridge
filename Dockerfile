@@ -11,6 +11,8 @@ RUN mkdir /opt/app
 
 COPY app /opt/app
 
+WORKDIR /opt/app/
+
 EXPOSE 8080
 
-ENTRYPOINT ["/usr/bin/python3", "/opt/app/app.py"]
+ENTRYPOINT ["/usr/bin/python3", "app.py"]
