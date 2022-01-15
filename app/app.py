@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 from starlette.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
+from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 def getNotifires(group):
     logger.info("Loading notifiers for " + group + " group")
@@ -42,7 +43,8 @@ app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 app.mount("/js", StaticFiles(directory="dist/js"), name="js")
 app.mount("/css", StaticFiles(directory="dist/css"), name="css")
 templates = Jinja2Templates(directory="templates/")
-
+app.add_middleware(PrometheusMiddleware)
+app.add_route("/metrics", handle_metrics)
 
 origins = ["*"]
 
@@ -94,16 +96,15 @@ def get_groups(request: Request):
 
 
 @app.post('/api/notifications/push')
-async def push(request: Request ):
+def push(request: Request,group: str = Form(...),message: str = Form(...),title: str = Form(...) ):
     logger.info("Pushing notifications")
-    data = await request.json()
     try:
-        notifires = getNotifires(data['group'])
+        notifires = getNotifires(group)
         apobj = apprise.Apprise()
         create_apobj(apobj,notifires)
-        await apobj.async_notify(
-            body=str(data["message"]),
-            title=str(data["title"]),
+        apobj.notify(
+            body=str(message),
+            title=str(title),
             )
         return JSONResponse(content = '{"message":"Configuration updated","success":"true"}')
     except Exception as e:
