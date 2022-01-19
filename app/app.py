@@ -113,5 +113,24 @@ def push(request: Request,group: str = Form(...),message: str = Form(...),title:
         return JSONResponse(content = '{"error":"'+error+'","success":"false"}')
 
 
+@app.get('/api/notifications/push')
+def push(request: Request,group: str="",message: str="", title: str="" ):
+    logger.info("Pushing notifications")
+    try:
+        notifires = getNotifires(group)
+        apobj = apprise.Apprise()
+        create_apobj(apobj,notifires)
+        apobj.notify(
+            body=str(message),
+            title=str(title),
+            )
+        return JSONResponse(content = '{"message":"Configuration updated","success":"true"}')
+    except Exception as e:
+        error = "Aw Snap! something went wrong " + str(e)
+        logger.error(error)
+        return JSONResponse(content = '{"error":"'+error+'","success":"false"}')
+
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8080)
