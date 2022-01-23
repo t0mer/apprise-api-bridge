@@ -33,12 +33,33 @@ def create_apobj(apobj, notifires):
     
     return apobj
    
+def GetVersionFromFle():
+    with open("VERSION","r") as version:
+        v = version.read()
+        return v
 
 
+tags_metadata = [
+    {
+        "name": "Channels Configuration",
+        "description": "Load, Save and update channels configuration",
+    },
+    {
+        "name": "Send Notifications",
+        "description": "Send notifications to selected group",
+ 
+        },
+     {
+        "name": "Groups",
+        "description": "Get list of available groups",
+ 
+        },
+    
+]
 
-app = FastAPI(title="Apprise API", description="Send multi channel notification using single endpoint", version="1.0.0")
+
+app = FastAPI(title="Apprise API", description="Send multi channel notification using single endpoint", version=GetVersionFromFle(), contact={"name":"Tomer Klein","email":"tomer.klein@gmail.com","url":"https://github.com/t0mer/apprise-api-bridge"})
 logger.info("Configuring app")
-app = FastAPI(title="Apprise API", description="Send multi channel notification using single endpoint", version="1.0.0")
 app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 app.mount("/js", StaticFiles(directory="dist/js"), name="js")
 app.mount("/css", StaticFiles(directory="dist/css"), name="css")
@@ -57,19 +78,13 @@ app.add_middleware(
 )
 
 
-@app.get("/api/config/load")
+@app.get("/api/config/load", tags=["Channels Configuration"])
 def get_config(request: Request):
     logger.info("Loading configuration file")
     with open('config.yaml', 'r') as config:
         return config.read()
- 
-@app.get("/")
-def home(request: Request):
-    logger.info("Loadin default page")
-    return templates.TemplateResponse('index.html', context={'request': request})
 
-
-@app.post('/api/config/save')
+@app.post('/api/config/save', tags=["Channels Configuration"])
 async def save_config(request: Request ):
     logger.info("Saving configuration to file")
     data = await request.json()
@@ -83,7 +98,15 @@ async def save_config(request: Request ):
         return JSONResponse(content = '{"error":"'+error+'","success":"false"}')
 
 
-@app.get("/api/groups/get")
+@app.get("/")
+def home(request: Request):
+    logger.info("Loading default page")
+    return templates.TemplateResponse('index.html', context={'request': request, 'version':GetVersionFromFle()})
+
+
+
+
+@app.get("/api/groups/get", tags=["Groups"])
 def get_groups(request: Request):
     logger.info("Loading configuration file")
     groups = []
@@ -95,7 +118,7 @@ def get_groups(request: Request):
  
 
 
-@app.post('/api/notifications/push')
+@app.post('/api/notifications/push', tags=["Send Notifications"])
 def push(request: Request,group: str = Form(...),message: str = Form(...),title: str = Form(...) ):
     logger.info("Pushing notifications")
     try:
@@ -113,7 +136,7 @@ def push(request: Request,group: str = Form(...),message: str = Form(...),title:
         return JSONResponse(content = '{"error":"'+error+'","success":"false"}')
 
 
-@app.get('/api/notifications/push')
+@app.get('/api/notifications/push', tags=["Send Notifications"])
 def push(request: Request,group: str="",message: str="", title: str="" ):
     logger.info("Pushing notifications")
     try:
