@@ -154,6 +154,5 @@ def push(request: Request,group: str="",message: str="", title: str="" ):
         return JSONResponse(content = '{"error":"'+error+'","success":"false"}')
 
 
-
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8080)
