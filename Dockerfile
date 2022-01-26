@@ -1,4 +1,4 @@
-FROM techblog/fastapi:latest
+FROM techblog/fastapi:1.0.0
 LABEL maintainer="tomer.klein@gmail.com"
 
 #install python paho-mqtt client and urllib3
