@@ -1,12 +1,16 @@
-FROM techblog/fastapi:1.0.0
+FROM techblog/fastapi:latest
+
 LABEL maintainer="tomer.klein@gmail.com"
 
-#install python paho-mqtt client and urllib3
-RUN pip3 install apprise --no-cache-dir && \
-    pip3 install pyaml --no-cache-dir
+ENV PYTHONIOENCODING=utf-8
+ENV LANG=C.UTF-8
+
+RUN apt update -yqq
+
+RUN pip3 install apprise  --no-cache-dir && \
+    pip3 install yml --no-cache-dir
 
 
-#Create working directory
 RUN mkdir /opt/app
 
 COPY app /opt/app
