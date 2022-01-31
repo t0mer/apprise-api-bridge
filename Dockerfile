@@ -8,7 +8,7 @@ ENV LANG=C.UTF-8
 RUN apt update -yqq
 
 RUN pip3 install apprise  --no-cache-dir && \
-    pip3 install yml pyaml --no-cache-dir
+    pip3 install yml pyaml pyyaml --no-cache-dir
 
 
 RUN mkdir /opt/app
