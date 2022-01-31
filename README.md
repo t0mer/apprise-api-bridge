@@ -9,7 +9,7 @@
 ## Single endpoint for sending notifications in multiple channels
 
 Once in a while i need to send notification from my environment. It can be en alert or an informational message.
-So i created thi sproject to help send these messages with minimum configuration and setup process and with maximum
+So i created this project to help send these messages with minimum configuration and setup process and with maximum
 supported notification channels.
 
 ## Features
